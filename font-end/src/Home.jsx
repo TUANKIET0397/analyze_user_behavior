@@ -1,20 +1,23 @@
 import img from "./assets/avatar.jpg";
 function Home() {
-    const stats = [
-      { label: "TUỔI", value: "32" },
-      { label: "GIỚI TÍNH", value: "Nam" },
-      { label: "THU NHẬP", value: "45M" },
-      { label: "TỔNG SỐ ĐƠN HÀNG", value: "128" },
-      { label: "QUẦN CỤT", value: "134" },
-      { label: "ÁO THUN", value: "15" },
-      { label: "QUẦN DÀI", value: "252" },
-      { label: "DÂY NỊT", value: "23" },
-      { label: "SỐ LƯỢNG ĐƠN", value: "421" },
-      { label: "ĐƠN VÀO MÙA XUÂN", value: "200" },
-      { label: "ĐƠN VÀO MÙA ĐÔNG", value: "221" },
-      { label: "PHỤ KIỆN", value: "23" },
-      { label: "THỜI TRANG", value: "23" },
-    ];
+  const user = {
+    name: "Baozeus",
+  };
+  const stats = [
+    { label: "TUỔI", value: "32" },
+    { label: "GIỚI TÍNH", value: "Nam" },
+    { label: "THU NHẬP", value: "45M" },
+    { label: "TỔNG SỐ ĐƠN HÀNG", value: "128" },
+    { label: "QUẦN CỤT", value: "134" },
+    { label: "ÁO THUN", value: "15" },
+    { label: "QUẦN DÀI", value: "252" },
+    { label: "DÂY NỊT", value: "23" },
+    { label: "SỐ LƯỢNG ĐƠN", value: "421" },
+    { label: "ĐƠN VÀO MÙA XUÂN", value: "200" },
+    { label: "ĐƠN VÀO MÙA ĐÔNG", value: "221" },
+    { label: "PHỤ KIỆN", value: "23" },
+    { label: "THỜI TRANG", value: "23" },
+  ];
   return (
     <div>
       <div className="flex justify-between px-5 py-2 items-center bg-gray-400">
@@ -64,7 +67,22 @@ function Home() {
           </div>
         </div>
         {/* right */}
-        <div className="col-span-2"></div>
+        <div className="col-span-2 pl-20 pr-5">
+          <div className="flex flex-col px-5 py-5">
+            <span className="text-xs text-gray-400">Dữ liệu thông minh</span>
+            <span className="font-bold text-2xl">Phân tích & Dự báo AI</span>
+          </div>
+          <div className="bg-white flex flex-col px-5 py-2 rounded-md">
+            <span className="font-bold">Xu hướng hành vi</span>
+            <span>
+              Người dùng <span className="font-bold">{user.name}</span> có xu
+              hướng chi tiêu mạnh vào cuối tuần, tập trung vào các mặt hàng Quần
+              áo. Dự báo chi tiêu sẽ tăng 15% trong tháng tới do nhu cầu nâng
+              cấp thiết bị cá nhân.
+            </span>
+          </div>
+          
+        </div>
       </div>
     </div>
   );
