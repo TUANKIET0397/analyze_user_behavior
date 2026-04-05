@@ -1,8 +1,5 @@
 import { FaArrowRight } from "react-icons/fa";
 function Login() {
-  function handleLogin() {
-    // Xử lý logic đăng nhập tại đây
-  }
   return (      
     <>
       <div>
