@@ -2,11 +2,21 @@ import img from "./assets/avatar.jpg";
 import Chart from "./Chart";
 import { BiSolidLike } from "react-icons/bi";
 import { FaCartShopping } from "react-icons/fa6";
+import { useState } from "react";
 function Home() {
+  const [isEditing, setIsEditing] = useState(false);
+  function toggleEdit() {
+    setIsEditing(!isEditing);
+  }
+  function handleInputChange(index, newValue) {
+    const newStats = [...stats];
+    newStats[index].value = newValue;
+    setStats(newStats);
+  }
   const user = {
     name: "Baozeus",
   };
-  const stats = [
+  const [stats,setStats] = useState([
     { label: "TUỔI", value: "32" },
     { label: "GIỚI TÍNH", value: "Nam" },
     { label: "THU NHẬP", value: "45M" },
@@ -20,7 +30,8 @@ function Home() {
     { label: "ĐƠN VÀO MÙA ĐÔNG", value: "221" },
     { label: "PHỤ KIỆN", value: "23" },
     { label: "THỜI TRANG", value: "23" },
-  ];
+  ]);
+
   return (
     <div>
       <div className="flex justify-between px-5 py-2 items-center bg-gray-400">
@@ -36,8 +47,8 @@ function Home() {
               <span className="text-xs">CÁ NHÂN HÓA</span>
               <span className="font-bold text-2xl">Chỉnh sửa hồ sơ</span>
             </div>
-            <button className="rounded-2xl bg-gray-700 px-4 h-8 text-white">
-              Sửa
+            <button className="rounded-2xl bg-gray-700 px-4 h-8 text-white cursor-pointer" onClick={toggleEdit}>
+              {isEditing ? "Lưu" : "Sửa"}
             </button>
           </div>
           {/* profile */}
@@ -60,11 +71,19 @@ function Home() {
                     <span className="block text-xs font-bold text-gray-500 uppercase tracking-wide">
                       {item.label}
                     </span>
-                    <span className="block text-xs text-gray-800 mt-2">
-                      {item.value}
-                    </span>
+                    {isEditing ? (
+                      <input type="text" 
+                      value={item.value}
+                      onChange={(e)=>{handleInputChange(index, e.target.value)}}
+                      className="block text-xs text-gray-800 mt-2"/>
+                    )
+                    :(
+                      <span className="block text-xs text-gray-800 mt-2">
+                        {item.value}
+                      </span>
+                    )}
                   </div>
-                ))}
+))}
               </div>
             </div>
           </div>
