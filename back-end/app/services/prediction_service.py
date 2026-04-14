@@ -2,12 +2,15 @@
 from sqlalchemy.orm import Session
 
 from app.ml.model import _model, predict_category
+from app.models.category_product import CategoryProduct
 from app.models.prediction import PredictionHistory
 from app.schemas.prediction_schema import (
     CategoryResult,
+    CategoryProductItem,
     PredictionData,
     PredictionDataDetailed,
     PredictionInput,
+    PredictionProductsData,
     PredictionResult,
     PredictionResultDetailed,
 )
@@ -102,3 +105,26 @@ def build_prediction_data(record: PredictionHistory) -> PredictionData:
         prediction=prediction,
         created_at=record.created_at,
     )
+
+
+def build_prediction_products_data(
+    db: Session,
+    record: PredictionHistory,
+) -> PredictionProductsData:
+    prediction = build_prediction_data(record)
+    products = (
+        db.query(CategoryProduct)
+        .filter(CategoryProduct.category == record.predicted_category)
+        .all()
+    )
+    product_items = [
+        CategoryProductItem(
+            id=item.id,
+            category=item.category,
+            product_name=item.product_name,
+            image_path=item.image_path,
+            price=item.price,
+        )
+        for item in products
+    ]
+    return PredictionProductsData(prediction=prediction, products=product_items)

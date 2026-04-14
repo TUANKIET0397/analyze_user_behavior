@@ -10,8 +10,13 @@ from app.schemas.prediction_schema import (
     PredictionDetailResponse,
     PredictionInput,
     PredictionListResponse,
+    PredictionProductsResponse,
 )
-from app.services.prediction_service import build_prediction_data, create_prediction_record
+from app.services.prediction_service import (
+    build_prediction_data,
+    build_prediction_products_data,
+    create_prediction_record,
+)
 
 
 router = APIRouter(prefix="/api/predictions", tags=["Predictions"])
@@ -55,6 +60,18 @@ def get_prediction(prediction_id: int, db: Session = Depends(get_db)):
     return PredictionDetailResponse(
         message="Prediction retrieved successfully",
         data=build_prediction_data(record),
+    )
+
+
+@router.get("/{prediction_id}/products", response_model=PredictionProductsResponse)
+def get_prediction_products(prediction_id: int, db: Session = Depends(get_db)):
+    record = db.query(PredictionHistory).filter(PredictionHistory.id == prediction_id).first()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Prediction not found")
+
+    return PredictionProductsResponse(
+        message="Prediction products retrieved successfully",
+        data=build_prediction_products_data(db, record),
     )
 
 

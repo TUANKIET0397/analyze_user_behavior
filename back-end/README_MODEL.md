@@ -78,6 +78,7 @@ hình ảnh - tên - giá tiền bảng category: Footwear - Accessories - cloth
 | POST   | `/api/predictions`                 | Dự đoán 1 user + lưu DB   |
 | GET    | `/api/predictions`                 | Danh sách lịch sử dự đoán |
 | GET    | `/api/predictions/{prediction_id}` | Chi tiết 1 dự đoán        |
+| GET    | `/api/predictions/{prediction_id}/products` | Chi tiết 1 dự đoán + gợi ý sản phẩm |
 | DELETE | `/api/predictions/{prediction_id}` | Xoa 1 dự đoán             |
 
 ### Swagger UI
@@ -139,4 +140,58 @@ curl -X POST http://localhost:8000/api/predictions \
 
 ```bash
 curl http://localhost:8000/api/predictions
+```
+
+### Prediction products
+
+```bash
+curl http://localhost:8000/api/predictions/1/products
+```
+
+### Response (products)
+
+```json
+{
+    "message": "Prediction products retrieved successfully",
+    "data": {
+        "prediction": {
+            "id": 1,
+            "input": {
+                "age": 28,
+                "gender": "Male",
+                "purchase_amount_usd": 45.5,
+                "review_rating": 4,
+                "season": "Fall",
+                "previous_purchases": 12,
+                "frequency_of_purchases": "monthly",
+                "subscription_status": "No"
+            },
+            "prediction": {
+                "predicted_category": "Footwear",
+                "confidence": 0.7234,
+                "top_categories": [
+                    { "category": "Footwear", "confidence": 0.7234 },
+                    { "category": "Accessories", "confidence": 0.1892 }
+                ]
+            },
+            "created_at": "2026-04-14T10:00:00"
+        },
+        "products": [
+            {
+                "id": 1,
+                "category": "Footwear",
+                "product_name": "Air Runner",
+                "image_path": "static/products/footwear_01.jpg",
+                "price": 79.0
+            },
+            {
+                "id": 2,
+                "category": "Footwear",
+                "product_name": "Urban Sneakers",
+                "image_path": "static/products/footwear_02.jpg",
+                "price": 92.5
+            }
+        ]
+    }
+}
 ```

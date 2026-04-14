@@ -2,10 +2,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.database import Base, engine
+from app.core.database import Base, SessionLocal, engine
 from app.ml.model import _model
 from app.routers.prediction_router import router as predictions_router
 from app.schemas.prediction_schema import HealthResponse
+from app.utils.seed_data import seed_category_products
 
 
 # App
@@ -40,6 +41,11 @@ def health_check():
 @app.on_event("startup")
 def on_startup() -> None:
     Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+    try:
+        seed_category_products(db)
+    finally:
+        db.close()
 
 
 app.include_router(predictions_router)

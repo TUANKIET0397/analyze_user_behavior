@@ -72,6 +72,24 @@ class PredictionDeleteResponse(BaseModel):
     message: str
 
 
+class CategoryProductItem(BaseModel):
+    id: int
+    category: str
+    product_name: str
+    image_path: str
+    price: float
+
+
+class PredictionProductsData(BaseModel):
+    prediction: PredictionData
+    products: list[CategoryProductItem]
+
+
+class PredictionProductsResponse(BaseModel):
+    message: str
+    data: PredictionProductsData
+
+
 class HealthResponse(BaseModel):
     status: str
     model: str
