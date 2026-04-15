@@ -16,20 +16,33 @@ function Home() {
   const user = {
     name: "Baozeus",
   };
-  const [stats,setStats] = useState([
-    { label: "TUỔI", value: "32" },
-    { label: "GIỚI TÍNH", value: "Nam" },
-    { label: "THU NHẬP", value: "45M" },
-    { label: "TỔNG SỐ ĐƠN HÀNG", value: "128" },
-    { label: "QUẦN CỤT", value: "134" },
-    { label: "ÁO THUN", value: "15" },
-    { label: "QUẦN DÀI", value: "252" },
-    { label: "DÂY NỊT", value: "23" },
-    { label: "SỐ LƯỢNG ĐƠN", value: "421" },
-    { label: "ĐƠN VÀO MÙA XUÂN", value: "200" },
-    { label: "ĐƠN VÀO MÙA ĐÔNG", value: "221" },
-    { label: "PHỤ KIỆN", value: "23" },
-    { label: "THỜI TRANG", value: "23" },
+  const [stats, setStats] = useState([
+    { label: "TUỔI", value: "32", type: "text" },
+    { label: "GIỚI TÍNH", value: "Nam", type: "text" },
+    { label: "SỐ TIỀN MUA HÀNG", value: "45M", type: "text" },
+    { label: "TỔNG SỐ ĐƠN HÀNG", value: "128", type: "text" },
+    {
+      label: "MÙA",
+      value: "Mùa Xuân",
+      type: "select",
+      options: ["Fall", "Summer", "Spring", "Winter"],
+    },
+    { label: "ĐĂNG KÍ THÀNH VIÊN", value: "Đã Đăng Kí", type: "boolean" },
+    {
+      label: "TẦN SUẤT MUA HÀNG",
+      value: "bi-weekly",
+      type: "select",
+      options: [
+        "weekly",
+        "bi-weekly",
+        "fortnightly",
+        "monthly",
+        "every 3 months",
+        "quarterly",
+        "annually",
+      ],
+    },
+    { label: "REVIEW RATING", value: "2.3", type: "text" },
   ]);
 
   return (
@@ -47,10 +60,19 @@ function Home() {
               <span className="text-xs">CÁ NHÂN HÓA</span>
               <span className="font-bold text-2xl">Chỉnh sửa hồ sơ</span>
             </div>
-            <button className="rounded-2xl bg-gray-700 px-4 h-8 text-white cursor-pointer" onClick={toggleEdit}>
-              {isEditing ? "Lưu" : "Sửa"}
-            </button>
+            <div className="flex gap-3">
+              <button className="rounded-2xl bg-gray-700 px-4 h-8 text-white cursor-pointer">
+                Dự đoán
+              </button>
+              <button
+                className="rounded-2xl bg-gray-700 px-4 h-8 text-white cursor-pointer"
+                onClick={toggleEdit}
+              >
+                {isEditing ? "Lưu" : "Sửa"}
+              </button>
+            </div>
           </div>
+
           {/* profile */}
           <div className=" bg-white px-5 py-5 mx-3 rounded-md">
             <div className="flex">
@@ -60,6 +82,7 @@ function Home() {
                 <span className="text-xs text-gray-400">khách hàng</span>
               </div>
             </div>
+
             {/* status */}
             <div>
               <div className="flex flex-col">
@@ -72,22 +95,74 @@ function Home() {
                       {item.label}
                     </span>
                     {isEditing ? (
-                      <input type="text" 
-                      value={item.value}
-                      onChange={(e)=>{handleInputChange(index, e.target.value)}}
-                      className="block text-xs text-gray-800 mt-2"/>
-                    )
-                    :(
-                      <span className="block text-xs text-gray-800 mt-2">
-                        {item.value}
+                      <div className="mt-2">
+                        {/* trường hợp select */}
+                        {item.type === "select" && (
+                          <select
+                            value={item.value}
+                            onChange={(e) =>
+                              handleInputChange(index, e.target.value)
+                            }
+                            className="
+                            block
+                            w-full
+                            text-xs
+                            border
+                            border-gray-300
+                            rounded
+                            p-1"
+                          >
+                            {item.options.map((option, index) => (
+                              <option key={index} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                        {/* trường hợp boolean */}
+                        {item.type === "boolean" && (
+                          <label className="flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={item.value}
+                              onChange={(e) =>
+                                handleInputChange(index, e.target.checked)
+                              }
+                              className="mr-2"
+                            />
+                            <span className="text-xs text-gray-600">
+                              Kích hoạt
+                            </span>
+                          </label>
+                        )}
+                        {/* trường hợp text */}
+                        {item.type === "text" && (
+                          <input
+                            type="text"
+                            value={item.value}
+                            onChange={(e) => {
+                              handleInputChange(index, e.target.value);
+                            }}
+                            className="block text-xs text-gray-800 mt-2"
+                          />
+                        )}
+                      </div>
+                    ) : (
+                      <span className="block text-xs text-gray-800 mt-2 font-medium">
+                        {item.label === "ĐĂNG KÍ THÀNH VIÊN"
+                          ? item.value
+                            ? "Đã đăng ký"
+                            : "Chưa đăng ký"
+                          : item.value}
                       </span>
                     )}
                   </div>
-))}
+                ))}
               </div>
             </div>
           </div>
         </div>
+
         {/* right */}
         <div className="col-span-2 pl-20 pr-5">
           <div className="flex flex-col px-5 py-5">
@@ -103,6 +178,7 @@ function Home() {
               cấp thiết bị cá nhân.
             </span>
           </div>
+
           {/* chart */}
           <div>
             <Chart />
@@ -111,6 +187,7 @@ function Home() {
             <BiSolidLike size={32} color="blue" />
             <span className="text-2xl">Gợi ý mua sắm AI</span>
           </div>
+
           {/* items */}
           <div className="flex gap-2">
             <div className="w-75 rounded-2xl bg-[#f5f6fa] p-3 shadow-sm">
@@ -120,19 +197,23 @@ function Home() {
                   alt="Áo khoác"
                   className="h-45 w-full rounded-xl object-cover"
                 />
-  
+
                 <div className="absolute right-3 top-3 rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-600">
                   Gợi ý 98%
                 </div>
               </div>
               <div className="mt-4 px-2 pb-2">
                 <p className="text-sm text-gray-400 uppercase">Áo</p>
-  
-                <h3 className="mt-1 text-xl font-semibold text-gray-800">Áo khoác</h3>
-  
+
+                <h3 className="mt-1 text-xl font-semibold text-gray-800">
+                  Áo khoác
+                </h3>
+
                 <div className="mt-4 flex items-center justify-between">
-                  <span className="text-lg font-bold text-gray-800">14.500.000đ</span>
-  
+                  <span className="text-lg font-bold text-gray-800">
+                    14.500.000đ
+                  </span>
+
                   <button className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
                     <FaCartShopping size={20} color="gray" />
                   </button>
@@ -146,19 +227,23 @@ function Home() {
                   alt="Áo khoác"
                   className="h-45 w-full rounded-xl object-cover"
                 />
-  
+
                 <div className="absolute right-3 top-3 rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-600">
                   Gợi ý 98%
                 </div>
               </div>
               <div className="mt-4 px-2 pb-2">
                 <p className="text-sm text-gray-400 uppercase">Áo</p>
-  
-                <h3 className="mt-1 text-xl font-semibold text-gray-800">Áo khoác</h3>
-  
+
+                <h3 className="mt-1 text-xl font-semibold text-gray-800">
+                  Áo khoác
+                </h3>
+
                 <div className="mt-4 flex items-center justify-between">
-                  <span className="text-lg font-bold text-gray-800">14.500.000đ</span>
-  
+                  <span className="text-lg font-bold text-gray-800">
+                    14.500.000đ
+                  </span>
+
                   <button className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
                     <FaCartShopping size={20} color="gray" />
                   </button>
@@ -172,19 +257,23 @@ function Home() {
                   alt="Áo khoác"
                   className="h-45 w-full rounded-xl object-cover"
                 />
-  
+
                 <div className="absolute right-3 top-3 rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-600">
                   Gợi ý 98%
                 </div>
               </div>
               <div className="mt-4 px-2 pb-2">
                 <p className="text-sm text-gray-400 uppercase">Áo</p>
-  
-                <h3 className="mt-1 text-xl font-semibold text-gray-800">Áo khoác</h3>
-  
+
+                <h3 className="mt-1 text-xl font-semibold text-gray-800">
+                  Áo khoác
+                </h3>
+
                 <div className="mt-4 flex items-center justify-between">
-                  <span className="text-lg font-bold text-gray-800">14.500.000đ</span>
-  
+                  <span className="text-lg font-bold text-gray-800">
+                    14.500.000đ
+                  </span>
+
                   <button className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300">
                     <FaCartShopping size={20} color="gray" />
                   </button>
