@@ -137,9 +137,6 @@ function Home() {
     const predictionConfidence =
         predictionResult?.data?.prediction?.confidence || null
 
-    const topCategories =
-        predictionResult?.data?.prediction?.top_categories || []
-
     const smartDescription = useMemo(() => {
         if (!predictionResult) {
             return `Người dùng ${user.name} có xu hướng chi tiêu mạnh vào cuối tuần, tập trung vào các mặt hàng Quần áo. Dự báo chi tiêu sẽ tăng 15% trong tháng tới do nhu cầu nâng cấp thiết bị cá nhân.`
@@ -343,57 +340,6 @@ function Home() {
 
                     {/* items */}
                     <ProductItem predictionId={predictionId} />
-                    {/* <div className="flex gap-2">
-                        {[1, 2, 3].map((itemIndex) => (
-                            <div
-                                key={itemIndex}
-                                className="w-75 rounded-2xl bg-[#f5f6fa] p-3 shadow-sm"
-                            >
-                                <div className="relative">
-                                    <img
-                                        src={img}
-                                        alt="Áo khoác"
-                                        className="h-45 w-full rounded-xl object-cover"
-                                    />
-
-                                    <div className="absolute right-3 top-3 rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-600">
-                                        {predictionConfidence !== null
-                                            ? `Gợi ý ${(
-                                                  predictionConfidence * 100
-                                              ).toFixed(0)}%`
-                                            : "Gợi ý 98%"}
-                                    </div>
-                                </div>
-
-                                <div className="mt-4 px-2 pb-2">
-                                    <p className="text-sm text-gray-400 uppercase">
-                                        {predictedCategory}
-                                    </p>
-
-                                    <h3 className="mt-1 text-xl font-semibold text-gray-800">
-                                        {topCategories[itemIndex - 1]
-                                            ?.category || predictedCategory}
-                                    </h3>
-
-                                    <div className="mt-4 flex items-center justify-between">
-                                        <span className="text-lg font-bold text-gray-800">
-                                            14.500.000đ
-                                        </span>
-
-                                        <button
-                                            type="button"
-                                            className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
-                                        >
-                                            <FaCartShopping
-                                                size={20}
-                                                color="gray"
-                                            />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div> */}
                 </div>
             </div>
         </div>
