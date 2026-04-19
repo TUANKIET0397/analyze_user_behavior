@@ -1,7 +1,7 @@
 import img from "./assets/avatar.jpg"
 import Chart from "./Chart"
+import ProductItem from "./components/ProductItem"
 import { BiSolidLike } from "react-icons/bi"
-import { FaCartShopping } from "react-icons/fa6"
 import { useMemo, useState } from "react"
 import { createPrediction } from "./api/api"
 
@@ -10,6 +10,7 @@ function Home() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [predictionResult, setPredictionResult] = useState(null)
+    const [predictionId, setPredictionId] = useState(null)
 
     const user = {
         name: "Baozeus",
@@ -120,8 +121,8 @@ function Home() {
             const payload = buildPayload()
 
             const data = await createPrediction(payload)
-
             setPredictionResult(data)
+            setPredictionId(data?.data?.id ?? null)
             setIsEditing(false)
         } catch (err) {
             setError(err.message || "Có lỗi xảy ra")
@@ -152,6 +153,7 @@ function Home() {
 
     return (
         <div>
+            {/* info */}
             <div className="flex justify-between px-5 py-2 items-center bg-gray-400">
                 <span>Bảng điều khiển</span>
                 <img
@@ -340,7 +342,8 @@ function Home() {
                     </div>
 
                     {/* items */}
-                    <div className="flex gap-2">
+                    <ProductItem predictionId={predictionId} />
+                    {/* <div className="flex gap-2">
                         {[1, 2, 3].map((itemIndex) => (
                             <div
                                 key={itemIndex}
@@ -390,7 +393,7 @@ function Home() {
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
