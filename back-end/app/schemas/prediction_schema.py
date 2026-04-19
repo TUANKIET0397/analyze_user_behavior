@@ -1,6 +1,6 @@
 # Schema Pydantic cho request/response va Swagger docs.
 from datetime import datetime
-from typing import Literal
+from typing import List, Literal
 
 from pydantic import BaseModel, Field
 
@@ -94,3 +94,18 @@ class HealthResponse(BaseModel):
     status: str
     model: str
     version: str
+
+class FeatureImpact(BaseModel):
+    feature: str
+    impact: float
+    impact_percent: float
+
+
+class PredictionChartData(BaseModel):
+    predicted: str
+    confidence: float
+    feature_importance: List[FeatureImpact]
+
+
+class PredictionChartResponse(BaseModel):
+    data: PredictionChartData

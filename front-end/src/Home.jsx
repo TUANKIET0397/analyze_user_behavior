@@ -3,31 +3,90 @@ import Chart from "./Chart";
 import { BiSolidLike } from "react-icons/bi";
 import { FaCartShopping } from "react-icons/fa6";
 import { useState } from "react";
+import { predict, explainPrediction } from "./api/api";
+
+
 function Home() {
+  const [featureData, setFeatureData] = useState([]);
+  const [donutData, setDonutData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const [isEditing, setIsEditing] = useState(false);
   function toggleEdit() {
     setIsEditing(!isEditing);
   }
+
   function handleInputChange(index, newValue) {
     const newStats = [...stats];
     newStats[index].value = newValue;
     setStats(newStats);
   }
+
+  function buildPayload() {
+    return {
+      age: Number(stats[0].value),
+      gender: stats[1].value === "Nam" ? "Male" : "Female",
+      purchase_amount_usd:
+        Number(stats[2].value),
+      previous_purchases: Number(stats[3].value),
+      season: stats[4].value,
+      subscription_status: stats[5].value ? "Yes" : "No",
+      frequency_of_purchases: stats[6].value,
+      review_rating: Number(stats[7].value),
+    };
+  }
+
+   async function handlePredict() {
+    try {
+      setLoading(true);
+
+      const payload = buildPayload();
+
+      const [resPredict, resExplain] = await Promise.all([
+        predict(payload),
+        explainPrediction(payload),
+      ]);
+
+      setFeatureData(resExplain.data.feature_importance);
+
+      const top = resPredict.data.prediction.top_categories;
+
+      setDonutData(
+        top.map((item) => ({
+          name: item.category,
+          value: Math.round(item.confidence * 100),
+        }))
+      );
+
+      console.log(resPredict);
+      console.log(resExplain);
+
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+  
   const user = {
     name: "Baozeus",
   };
   const [stats, setStats] = useState([
     { label: "TUỔI", value: "32", type: "text" },
-    { label: "GIỚI TÍNH", value: "Nam", type: "text" },
-    { label: "SỐ TIỀN MUA HÀNG", value: "45M", type: "text" },
+    { label: "GIỚI TÍNH",
+      value: "Male",
+      type: "select",
+      options: ["Male", "Female"],
+    },
+    { label: "SỐ TIỀN MUA HÀNG", value: "45", type: "text" },
     { label: "TỔNG SỐ ĐƠN HÀNG", value: "128", type: "text" },
     {
       label: "MÙA",
-      value: "Mùa Xuân",
+      value: "Spring",
       type: "select",
       options: ["Fall", "Summer", "Spring", "Winter"],
     },
-    { label: "ĐĂNG KÍ THÀNH VIÊN", value: "Đã Đăng Kí", type: "boolean" },
+    { label: "ĐĂNG KÍ THÀNH VIÊN", value: true, type: "boolean" },
     {
       label: "TẦN SUẤT MUA HÀNG",
       value: "bi-weekly",
@@ -61,8 +120,12 @@ function Home() {
               <span className="font-bold text-2xl">Chỉnh sửa hồ sơ</span>
             </div>
             <div className="flex gap-3">
-              <button className="rounded-2xl bg-gray-700 px-4 h-8 text-white cursor-pointer">
-                Dự đoán
+              <button 
+                className="rounded-2xl bg-gray-700 px-4 h-8 text-white cursor-pointer"
+                onClick={handlePredict}
+                disabled={loading} 
+              >
+                {loading ? "Đang dự đoán..." : "Dự đoán"}
               </button>
               <button
                 className="rounded-2xl bg-gray-700 px-4 h-8 text-white cursor-pointer"
@@ -181,7 +244,10 @@ function Home() {
 
           {/* chart */}
           <div>
-            <Chart />
+           <Chart 
+              donutData={donutData}
+              featureData={featureData}
+            />
           </div>
           <div className="flex gap-3 items-center my-5">
             <BiSolidLike size={32} color="blue" />
