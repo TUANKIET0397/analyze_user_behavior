@@ -2,10 +2,14 @@ import img from "./assets/avatar.jpg"
 import Chart from "./Chart"
 import ProductItem from "./components/ProductItem"
 import { BiSolidLike } from "react-icons/bi"
+import { FaCartShopping } from "react-icons/fa6"
 import { useMemo, useState } from "react"
-import { createPrediction } from "./api/api"
+import { createPrediction, explainPrediction } from "./api/api"
 
 function Home() {
+    const [featureData, setFeatureData] = useState([])
+    const [donutData, setDonutData] = useState([])
+
     const [isEditing, setIsEditing] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
@@ -124,6 +128,20 @@ function Home() {
             setPredictionResult(data)
             setPredictionId(data?.data?.id ?? null)
             setIsEditing(false)
+            const [resPredict, resExplain] = await Promise.all([
+                createPrediction(payload),
+                explainPrediction(payload),
+            ])
+            setFeatureData(resExplain.data.feature_importance)
+
+            const top = resPredict.data.prediction.top_categories
+
+            setDonutData(
+                top.map((item) => ({
+                    name: item.category,
+                    value: Math.round(item.confidence * 100),
+                })),
+            )
         } catch (err) {
             setError(err.message || "Có lỗi xảy ra")
         } finally {
@@ -330,7 +348,10 @@ function Home() {
 
                     {/* chart */}
                     <div>
-                        <Chart />
+                        <Chart
+                            donutData={donutData}
+                            featureData={featureData}
+                        />
                     </div>
 
                     <div className="flex gap-3 items-center my-5">

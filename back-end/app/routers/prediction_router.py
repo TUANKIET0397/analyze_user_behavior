@@ -11,12 +11,16 @@ from app.schemas.prediction_schema import (
     PredictionInput,
     PredictionListResponse,
     PredictionProductsResponse,
+    PredictionChartResponse,
 )
 from app.services.prediction_service import (
     build_prediction_data,
     build_prediction_products_data,
     create_prediction_record,
 )
+
+from app.utils.mapper import map_input_to_raw
+from app.services.prediction_service import build_prediction_chart_data
 
 
 router = APIRouter(prefix="/api/predictions", tags=["Predictions"])
@@ -85,3 +89,14 @@ def delete_prediction(prediction_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return PredictionDeleteResponse(message="Prediction deleted successfully")
+
+
+@router.post("/chart", response_model=PredictionChartResponse)
+def explain_prediction_api(payload: PredictionInput):
+    raw_input = map_input_to_raw(payload)
+
+    data = build_prediction_chart_data(raw_input)   
+
+    return PredictionChartResponse(
+        data=data
+    )

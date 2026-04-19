@@ -3,7 +3,7 @@ import json
 
 from sqlalchemy.orm import Session
 
-from app.ml.model import _model, predict_category
+from app.ml.model import _model, predict_category, predict_chart
 from app.models.category_product import CategoryProduct
 from app.models.prediction import PredictionHistory
 from app.schemas.prediction_schema import (
@@ -16,6 +16,8 @@ from app.schemas.prediction_schema import (
     PredictionResultDetailed,
 )
 from app.utils.mapper import map_input_to_raw
+from app.schemas.prediction_schema import PredictionChartData, FeatureImpact
+
 
 
 PRODUCT_RULES = {
@@ -378,3 +380,18 @@ def build_prediction_products_data(
         for item in products
     ]
     return PredictionProductsData(prediction=prediction, products=product_items)
+
+
+def build_prediction_chart_data(raw_input: dict):
+    result = predict_chart(raw_input)
+
+    feature_importance = [
+        FeatureImpact(**item)
+        for item in result["feature_importance"]
+    ]
+
+    return PredictionChartData(
+        predicted=result["predicted"],
+        confidence=result["confidence"],
+        feature_importance=feature_importance
+    )
