@@ -1,5 +1,7 @@
 # Diem vao FastAPI: tao app, CORS, dang ky router va startup DB.
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import Base, SessionLocal, engine
@@ -24,6 +26,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 @app.get("/", tags=["Root"])
 def root():
@@ -41,6 +45,14 @@ def health_check():
 @app.on_event("startup")
 def on_startup() -> None:
     Base.metadata.create_all(bind=engine)
+    with engine.connect() as conn:
+        result = conn.execute(text("PRAGMA table_info(prediction_history)"))
+        cols = {row[1] for row in result}
+        if "top_categories_json" not in cols:
+            conn.execute(
+                text("ALTER TABLE prediction_history ADD COLUMN top_categories_json TEXT")
+            )
+            conn.commit()
     db = SessionLocal()
     try:
         seed_category_products(db)

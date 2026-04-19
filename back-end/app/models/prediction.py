@@ -1,7 +1,7 @@
 # ORM model cho bang prediction_history (luu lich su du doan).
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, Float, Integer, String
+from sqlalchemy import Boolean, DateTime, Float, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -22,4 +22,5 @@ class PredictionHistory(Base):
     discount_applied: Mapped[bool] = mapped_column(Boolean, nullable=False)
     predicted_category: Mapped[str] = mapped_column(String(50), nullable=False)
     confidence: Mapped[float] = mapped_column(Float, nullable=False)
+    top_categories_json: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
