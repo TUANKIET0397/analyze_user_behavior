@@ -132,7 +132,7 @@ def seed_category_products(db: Session) -> None:
         {
             "category": "Accessories",
             "product_name": "Scarf",
-            "image_path": "static/products/Scarf.jpg",
+            "image_path": "static/products/Scarfs.jpg",
             "price": 60.9,
         },
         {
