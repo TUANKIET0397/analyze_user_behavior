@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { FaCartShopping } from "react-icons/fa6"
 
+const API_URL = import.meta.env.VITE_API_BACKEND
+
 export default function ProductItem({ predictionId }) {
     const [products, setProducts] = useState([])
 
@@ -10,7 +12,7 @@ export default function ProductItem({ predictionId }) {
             return
         }
 
-        fetch(`http://127.0.0.1:8000/api/predictions/${predictionId}/products`)
+        fetch(`${API_URL}/api/predictions/${predictionId}/products`)
             .then((res) => res.json())
             .then((res) => {
                 setProducts(res?.data?.products || [])
@@ -22,7 +24,7 @@ export default function ProductItem({ predictionId }) {
     }
 
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-3 overflow-x-auto py-3">
             {products.map((item) => (
                 <div
                     key={item.id}
@@ -30,7 +32,7 @@ export default function ProductItem({ predictionId }) {
                 >
                     <div className="relative">
                         <img
-                            src={`http://127.0.0.1:8000/${item.image_path || ""}`}
+                            src={`${API_URL}/${item.image_path || ""}`}
                             alt={item.product_name}
                             className="h-45 w-full rounded-xl object-cover"
                         />

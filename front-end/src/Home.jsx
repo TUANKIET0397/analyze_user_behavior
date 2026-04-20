@@ -16,10 +16,6 @@ function Home() {
     const [predictionResult, setPredictionResult] = useState(null)
     const [predictionId, setPredictionId] = useState(null)
 
-    const user = {
-        name: "Baozeus",
-    }
-
     const [stats, setStats] = useState([
         {
             key: "age",
@@ -157,210 +153,189 @@ function Home() {
 
     const smartDescription = useMemo(() => {
         if (!predictionResult) {
-            return `Người dùng ${user.name} có xu hướng chi tiêu mạnh vào cuối tuần, tập trung vào các mặt hàng Quần áo. Dự báo chi tiêu sẽ tăng 15% trong tháng tới do nhu cầu nâng cấp thiết bị cá nhân.`
+            return `Chưa có dự đoán nào được tạo ra. Vui lòng điền thông tin và nhấn "Dự đoán" để xem kết quả.`
         }
 
         const input = predictionResult.data.input
         const prediction = predictionResult.data.prediction
 
-        return `Người dùng ${user.name} có xu hướng mua sắm vào mùa ${input.season}, với tần suất ${input.frequency_of_purchases}. AI dự đoán nhóm sản phẩm phù hợp nhất hiện tại là ${prediction.predicted_category} với độ tin cậy ${(prediction.confidence * 100).toFixed(2)}%.`
-    }, [predictionResult, user.name])
+        return `Object có xu hướng mua sắm vào mùa ${input.season}, với tần suất ${input.frequency_of_purchases}. AI dự đoán nhóm sản phẩm phù hợp nhất hiện tại là ${prediction.predicted_category} với độ tin cậy ${(prediction.confidence * 100).toFixed(2)}%.`
+    }, [predictionResult])
 
     return (
         <div>
-            {/* info */}
-            <div className="flex justify-between px-5 py-2 items-center bg-gray-400">
-                <span>Bảng điều khiển</span>
-                <img
-                    src={img}
-                    alt="avatar"
-                    className="rounded-full w-10 h-10"
-                />
-            </div>
-
             {/* body */}
-            <div className="grid grid-cols-3 bg-gray-200">
-                {/* left */}
-                <form onSubmit={handleSubmitForm} className="relative">
-                    <div className="relative flex justify-between items-center px-5 py-5">
-                        <div className="flex flex-col">
-                            <span className="text-xs">CÁ NHÂN HÓA</span>
-                            <span className="font-bold text-2xl">
-                                Chỉnh sửa hồ sơ
-                            </span>
-                        </div>
-                        <div className="flex gap-3">
-                            <button
-                                type="button"
-                                className="rounded-2xl bg-gray-700 px-4 h-8 text-white cursor-pointer"
-                                onClick={toggleEdit}
-                            >
-                                {isEditing ? "Đóng" : "Sửa"}
-                            </button>
-                        </div>
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="absolute top-[29px] left-[300px] rounded-2xl bg-gray-700 px-4 h-8 text-white cursor-pointer disabled:opacity-70"
-                    >
-                        {loading ? "Đang dự đoán..." : "Dự đoán"}
-                    </button>
-
-                    {/* profile */}
-                    <div className="bg-white px-5 py-5 mx-3 rounded-md">
-                        <div className="flex">
-                            <img
-                                src={img}
-                                alt=""
-                                className="rounded-md h-12 w-13"
-                            />
-                            <div className="flex flex-col ml-5 gap-y-2">
-                                <span className="font-bold">Name</span>
-                                <span className="text-xs text-gray-400">
-                                    khách hàng
-                                </span>
-                            </div>
-                        </div>
-
-                        {error && (
-                            <div className="mt-4 rounded-md bg-red-50 px-3 py-2 text-xs text-red-600">
-                                {error}
-                            </div>
-                        )}
-
-                        {/* status */}
-                        <div>
-                            <div className="flex flex-col">
-                                {stats.map((item, index) => (
-                                    <div
-                                        key={item.key}
-                                        className="py-4 border-b border-gray-100 last:border-0"
-                                    >
-                                        <span className="block text-xs font-bold text-gray-500 uppercase tracking-wide">
-                                            {item.label}
+            <div className="flex flex-col bg-gray-200 gap-4 px-4 py-3">
+                <div className="flex gap-6">
+                    {/* left */}
+                    <form onSubmit={handleSubmitForm}>
+                        {/* profile */}
+                        <div className="bg-white rounded-md px-5 pt-4 pb-10 flex flex-col gap-y-4">
+                            <div className="flex justify-between">
+                                <div className="flex items-center">
+                                    <img
+                                        src={img}
+                                        alt=""
+                                        className="rounded-md h-12 w-13"
+                                    />
+                                    <p className="flex flex-col ml-4 gap-y-2 w-[100px]">
+                                        <span className="text-[19px] font-bold">
+                                            Group 5
                                         </span>
+                                        <span className="text-[15px] text-gray-400">
+                                            Object
+                                        </span>
+                                    </p>
+                                </div>
 
-                                        {isEditing ? (
-                                            <div className="mt-2">
-                                                {item.type === "select" && (
-                                                    <select
-                                                        value={item.value}
-                                                        onChange={(e) =>
-                                                            handleInputChange(
-                                                                index,
-                                                                e.target.value,
-                                                            )
-                                                        }
-                                                        className="block w-full text-xs border border-gray-300 rounded p-1"
-                                                    >
-                                                        {item.options.map(
-                                                            (option) => (
-                                                                <option
-                                                                    key={option}
-                                                                    value={
-                                                                        option
-                                                                    }
-                                                                >
-                                                                    {option}
-                                                                </option>
-                                                            ),
-                                                        )}
-                                                    </select>
-                                                )}
+                                <div className="flex items-center gap-4 pl-40">
+                                    <button
+                                        type="button"
+                                        className="rounded-2xl bg-gray-700 px-4 h-8 w-auto text-white cursor-pointer"
+                                        onClick={toggleEdit}
+                                    >
+                                        {isEditing ? "Đóng" : "Sửa"}
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="rounded-2xl bg-gray-700 px-4 w-[100px] h-8 max-w-[100px] text-white cursor-pointer disabled:opacity-70"
+                                    >
+                                        {loading
+                                            ? "Đang dự đoán..."
+                                            : "Dự đoán"}
+                                    </button>
+                                </div>
+                            </div>
 
-                                                {item.type === "text" && (
-                                                    <input
-                                                        type={
-                                                            item.inputType ||
-                                                            "text"
-                                                        }
-                                                        step={item.step}
-                                                        value={item.value}
-                                                        onChange={(e) =>
-                                                            handleInputChange(
-                                                                index,
-                                                                e.target.value,
-                                                            )
-                                                        }
-                                                        className="block w-full text-xs text-gray-800 mt-2 border border-gray-300 rounded p-1"
-                                                    />
-                                                )}
-                                            </div>
-                                        ) : (
-                                            <span className="block text-xs text-gray-800 mt-2 font-medium">
-                                                {item.value}
+                            {error && (
+                                <div className="mt-4 rounded-md bg-red-50 px-3 py-2 text-xs text-red-600">
+                                    {error}
+                                </div>
+                            )}
+
+                            {/* status */}
+                            <div>
+                                <div className="flex flex-col">
+                                    {stats.map((item, index) => (
+                                        <div
+                                            key={item.key}
+                                            className="py-4 border-b border-gray-100 last:border-0"
+                                        >
+                                            <span className="block text-[16px] font-bold text-gray-500 uppercase tracking-wide">
+                                                {item.label}
                                             </span>
-                                        )}
-                                    </div>
-                                ))}
+
+                                            {isEditing ? (
+                                                <div className="mt-2">
+                                                    {item.type === "select" && (
+                                                        <select
+                                                            value={item.value}
+                                                            onChange={(e) =>
+                                                                handleInputChange(
+                                                                    index,
+                                                                    e.target
+                                                                        .value,
+                                                                )
+                                                            }
+                                                            className="block w-full text-[16px] border border-gray-300 rounded p-1"
+                                                        >
+                                                            {item.options.map(
+                                                                (option) => (
+                                                                    <option
+                                                                        key={
+                                                                            option
+                                                                        }
+                                                                        value={
+                                                                            option
+                                                                        }
+                                                                    >
+                                                                        {option}
+                                                                    </option>
+                                                                ),
+                                                            )}
+                                                        </select>
+                                                    )}
+
+                                                    {item.type === "text" && (
+                                                        <input
+                                                            type={
+                                                                item.inputType ||
+                                                                "text"
+                                                            }
+                                                            step={item.step}
+                                                            value={item.value}
+                                                            onChange={(e) =>
+                                                                handleInputChange(
+                                                                    index,
+                                                                    e.target
+                                                                        .value,
+                                                                )
+                                                            }
+                                                            className="block w-full text-[14px] text-gray-800 border border-gray-300 rounded p-1"
+                                                        />
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <span className="block text-[14px] text-gray-800 font-medium">
+                                                    {item.value}
+                                                </span>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
+                    </form>
+
+                    {/* right */}
+                    <div className="flex-1">
+                        {/* chart */}
+                        <div>
+                            <Chart
+                                donutData={donutData}
+                                featureData={featureData}
+                            />
+                        </div>
+                        {/* items */}
+                        <ProductItem predictionId={predictionId} />
                     </div>
-                </form>
+                </div>
+                {/* conclusion */}
+                <div className="bg-white flex flex-col px-4 pt-4 pb-4 rounded-md">
+                    <span className="font-bold text-[20px]">
+                        Xu hướng hành vi
+                    </span>
+                    <span className=" mt-1 text-[18px] text-gray-700">
+                        {smartDescription}
+                    </span>
 
-                {/* right */}
-                <div className="col-span-2 pl-20 pr-5">
-                    <div className="flex flex-col px-5 py-5">
-                        <span className="text-xs text-gray-400">
-                            Dữ liệu thông minh
-                        </span>
-                        <span className="font-bold text-2xl">
-                            Phân tích & Dự báo AI
-                        </span>
-                    </div>
-
-                    <div className="bg-white flex flex-col px-5 py-2 rounded-md">
-                        <span className="font-bold">Xu hướng hành vi</span>
-                        <span>{smartDescription}</span>
-
-                        {predictionResult && (
-                            <div className="mt-4 text-sm text-gray-700">
-                                <div>
-                                    <span className="font-semibold">
-                                        Danh mục dự đoán:
-                                    </span>{" "}
-                                    {predictedCategory}
-                                </div>
-
-                                {predictionConfidence !== null && (
-                                    <div className="mt-1">
-                                        <span className="font-semibold">
-                                            Độ tin cậy:
-                                        </span>{" "}
-                                        {(predictionConfidence * 100).toFixed(
-                                            2,
-                                        )}
-                                        %
-                                    </div>
-                                )}
-
-                                <div className="mt-1">
-                                    <span className="font-semibold">
-                                        Thời gian tạo:
-                                    </span>{" "}
-                                    {predictionResult.data.created_at}
-                                </div>
+                    {predictionResult && (
+                        <div className="ml-2 mt-2 text-sm text-gray-700">
+                            <div>
+                                <span className="font-semibold text-[17px]">
+                                    Danh mục dự đoán:
+                                </span>{" "}
+                                {predictedCategory}
                             </div>
-                        )}
-                    </div>
 
-                    {/* chart */}
-                    <div>
-                        <Chart
-                            donutData={donutData}
-                            featureData={featureData}
-                        />
-                    </div>
+                            {predictionConfidence !== null && (
+                                <div className="mt-1">
+                                    <span className="font-semibold text-[17px]">
+                                        Độ tin cậy:
+                                    </span>{" "}
+                                    {(predictionConfidence * 100).toFixed(2)}%
+                                </div>
+                            )}
 
-                    <div className="flex gap-3 items-center my-5">
-                        <BiSolidLike size={32} color="blue" />
-                        <span className="text-2xl">Gợi ý mua sắm AI</span>
-                    </div>
-
-                    {/* items */}
-                    <ProductItem predictionId={predictionId} />
+                            <div className="mt-1">
+                                <span className="font-semibold text-[17px]">
+                                    Thời gian tạo:
+                                </span>{" "}
+                                {predictionResult.data.created_at}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
