@@ -1,12 +1,21 @@
 import img from "./assets/avatar.jpg"
 import Chart from "./Chart"
+import {
+    TwoChartsSkeleton,
+    ProductSkeleton,
+    SkeletonBlock,
+} from "./components/TwoChartsSkeleton"
 import ProductItem from "./components/ProductItem"
 import { BiSolidLike } from "react-icons/bi"
 import { FaCartShopping } from "react-icons/fa6"
+import { TailSpin } from "react-loader-spinner"
+// import Skeleton from "react-loading-skeleton"
+import "react-loading-skeleton/dist/skeleton.css"
 import { useMemo, useState } from "react"
 import { createPrediction, explainPrediction } from "./api/api"
 
 function Home() {
+    const MIN_LOADING_MS = 1200
     const [featureData, setFeatureData] = useState([])
     const [donutData, setDonutData] = useState([])
 
@@ -116,18 +125,18 @@ function Home() {
         e.preventDefault()
         setLoading(true)
         setError("")
+        const startTime = Date.now()
 
         try {
             const payload = buildPayload()
 
-            const data = await createPrediction(payload)
-            setPredictionResult(data)
-            setPredictionId(data?.data?.id ?? null)
-            setIsEditing(false)
             const [resPredict, resExplain] = await Promise.all([
                 createPrediction(payload),
                 explainPrediction(payload),
             ])
+            setPredictionResult(resPredict)
+            setPredictionId(resPredict?.data?.id ?? null)
+            setIsEditing(false)
             setFeatureData(resExplain.data.feature_importance)
 
             const top = resPredict.data.prediction.top_categories
@@ -141,6 +150,11 @@ function Home() {
         } catch (err) {
             setError(err.message || "Có lỗi xảy ra")
         } finally {
+            const elapsed = Date.now() - startTime
+            const remaining = Math.max(0, MIN_LOADING_MS - elapsed)
+            if (remaining > 0) {
+                await new Promise((resolve) => setTimeout(resolve, remaining))
+            }
             setLoading(false)
         }
     }
@@ -199,11 +213,18 @@ function Home() {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="rounded-2xl bg-gray-700 px-4 w-[100px] h-8 max-w-[100px] text-white cursor-pointer disabled:opacity-70"
+                                        className="flex items-center justify-center rounded-2xl bg-gray-700 px-4 w-[100px] h-8 max-w-[100px] text-white cursor-pointer disabled:opacity-70"
                                     >
-                                        {loading
-                                            ? "Đang dự đoán..."
-                                            : "Dự đoán"}
+                                        {loading ? (
+                                            <TailSpin
+                                                center
+                                                height={20}
+                                                width={20}
+                                                color="#fff"
+                                            />
+                                        ) : (
+                                            "Dự đoán"
+                                        )}
                                     </button>
                                 </div>
                             </div>
@@ -291,18 +312,100 @@ function Home() {
                     {/* right */}
                     <div className="flex-1">
                         {/* chart */}
-                        <div>
+                        {loading ? (
+                            //show skeleton when loading
+                            <TwoChartsSkeleton />
+                        ) : (
                             <Chart
                                 donutData={donutData}
                                 featureData={featureData}
                             />
-                        </div>
+                        )}
+                        {/* <div>
+                            <Chart
+                                donutData={donutData}
+                                featureData={featureData}
+                            />
+                        </div> */}
                         {/* items */}
-                        <ProductItem predictionId={predictionId} />
+                        {loading ? (
+                            //show skeleton when loading
+                            <ProductSkeleton />
+                        ) : (
+                            <ProductItem predictionId={predictionId} />
+                        )}
                     </div>
                 </div>
                 {/* conclusion */}
                 <div className="bg-white flex flex-col px-4 pt-4 pb-4 rounded-md">
+                    <span className="font-bold text-[20px]">
+                        Xu hướng hành vi
+                    </span>
+
+                    {loading ? (
+                        <div className="mt-3">
+                            <div className="space-y-3">
+                                <SkeletonBlock className="h-5 w-full" />
+                                <SkeletonBlock className="h-5 w-11/12" />
+                                <SkeletonBlock className="h-5 w-8/12" />
+                            </div>
+
+                            <div className="ml-2 mt-4 space-y-3">
+                                <div className="flex items-center gap-2">
+                                    <SkeletonBlock className="h-5 w-40" />
+                                    <SkeletonBlock className="h-5 w-28" />
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <SkeletonBlock className="h-5 w-28" />
+                                    <SkeletonBlock className="h-5 w-16" />
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <SkeletonBlock className="h-5 w-32" />
+                                    <SkeletonBlock className="h-5 w-36" />
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <span className="mt-1 text-[18px] text-gray-700">
+                                {smartDescription}
+                            </span>
+
+                            {predictionResult && (
+                                <div className="ml-2 mt-2 text-sm text-gray-700">
+                                    <div>
+                                        <span className="font-semibold text-[17px]">
+                                            Danh mục dự đoán:
+                                        </span>{" "}
+                                        {predictedCategory}
+                                    </div>
+
+                                    {predictionConfidence !== null && (
+                                        <div className="mt-1">
+                                            <span className="font-semibold text-[17px]">
+                                                Độ tin cậy:
+                                            </span>{" "}
+                                            {(
+                                                predictionConfidence * 100
+                                            ).toFixed(2)}
+                                            %
+                                        </div>
+                                    )}
+
+                                    <div className="mt-1">
+                                        <span className="font-semibold text-[17px]">
+                                            Thời gian tạo:
+                                        </span>{" "}
+                                        {predictionResult.data.created_at}
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+                {/* <div className="bg-white flex flex-col px-4 pt-4 pb-4 rounded-md">
                     <span className="font-bold text-[20px]">
                         Xu hướng hành vi
                     </span>
@@ -336,7 +439,7 @@ function Home() {
                             </div>
                         </div>
                     )}
-                </div>
+                </div> */}
             </div>
         </div>
     )

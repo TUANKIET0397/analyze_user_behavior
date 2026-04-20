@@ -35,6 +35,7 @@ export default function TwoCharts({ donutData, featureData }) {
                                 label={({ percent }) =>
                                     `${(percent * 100).toFixed(0)}%`
                                 }
+                                isAnimationActive={false}
                             >
                                 {donutData?.map((entry, index) => (
                                     <Cell
@@ -92,6 +93,7 @@ export default function TwoCharts({ donutData, featureData }) {
                                 tickFormatter={
                                     (val) => val.replaceAll("_", " ") // thay dấu gạch dưới bằng dấu cách
                                 }
+                                isAnimationActive={false}
                             />
 
                             <Bar
