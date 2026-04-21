@@ -9,6 +9,7 @@ import ProductItem from "./components/ProductItem"
 import { BiSolidLike } from "react-icons/bi"
 import { FaCartShopping } from "react-icons/fa6"
 import { TailSpin } from "react-loader-spinner"
+// import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import { useMemo, useState } from "react"
 import { createPrediction, explainPrediction } from "./api/api"
@@ -27,49 +28,49 @@ function Home() {
     const [stats, setStats] = useState([
         {
             key: "age",
-            label: "TUỔI",
+            label: "Age",
             value: "32",
             type: "text",
             inputType: "number",
         },
         {
             key: "gender",
-            label: "GIỚI TÍNH",
+            label: "Gender",
             value: "Female",
             type: "select",
             options: ["Female", "Male"],
         },
         {
             key: "purchase_amount_usd",
-            label: "SỐ TIỀN MUA HÀNG",
+            label: "Purchase Amount (USD)",
             value: "45",
             type: "text",
             inputType: "number",
         },
         {
             key: "previous_purchases",
-            label: "TỔNG SỐ ĐƠN HÀNG",
+            label: "Total Number of Orders",
             value: "128",
             type: "text",
             inputType: "number",
         },
         {
             key: "season",
-            label: "MÙA",
+            label: "Season",
             value: "Spring",
             type: "select",
             options: ["Fall", "Summer", "Spring", "Winter"],
         },
         {
             key: "subscription_status",
-            label: "ĐĂNG KÍ THÀNH VIÊN",
+            label: "Subscription Status",
             value: "Yes",
             type: "select",
             options: ["Yes", "No"],
         },
         {
             key: "frequency_of_purchases",
-            label: "TẦN SUẤT MUA HÀNG",
+            label: "Frequency of Purchases",
             value: "bi-weekly",
             type: "select",
             options: [
@@ -320,6 +321,12 @@ function Home() {
                                 featureData={featureData}
                             />
                         )}
+                        {/* <div>
+                            <Chart
+                                donutData={donutData}
+                                featureData={featureData}
+                            />
+                        </div> */}
                         {/* items */}
                         {loading ? (
                             //show skeleton when loading
@@ -398,9 +405,45 @@ function Home() {
                         </>
                     )}
                 </div>
+                {/* <div className="bg-white flex flex-col px-4 pt-4 pb-4 rounded-md">
+                    <span className="font-bold text-[20px]">
+                        Xu hướng hành vi
+                    </span>
+                    <span className=" mt-1 text-[18px] text-gray-700">
+                        {smartDescription}
+                    </span>
+
+                    {predictionResult && (
+                        <div className="ml-2 mt-2 text-sm text-gray-700">
+                            <div>
+                                <span className="font-semibold text-[17px]">
+                                    Danh mục dự đoán:
+                                </span>{" "}
+                                {predictedCategory}
+                            </div>
+
+                            {predictionConfidence !== null && (
+                                <div className="mt-1">
+                                    <span className="font-semibold text-[17px]">
+                                        Độ tin cậy:
+                                    </span>{" "}
+                                    {(predictionConfidence * 100).toFixed(2)}%
+                                </div>
+                            )}
+
+                            <div className="mt-1">
+                                <span className="font-semibold text-[17px]">
+                                    Thời gian tạo:
+                                </span>{" "}
+                                {predictionResult.data.created_at}
+                            </div>
+                        </div>
+                    )}
+                </div> */}
             </div>
         </div>
     )
 }
 
 export default Home
+
