@@ -28,7 +28,6 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-
 @app.get("/", tags=["Root"])
 def root():
     return {"message": "Fashion Category Prediction API is running."}

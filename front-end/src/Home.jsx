@@ -9,7 +9,6 @@ import ProductItem from "./components/ProductItem"
 import { BiSolidLike } from "react-icons/bi"
 import { FaCartShopping } from "react-icons/fa6"
 import { TailSpin } from "react-loader-spinner"
-// import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import { useMemo, useState } from "react"
 import { createPrediction, explainPrediction } from "./api/api"
@@ -321,12 +320,6 @@ function Home() {
                                 featureData={featureData}
                             />
                         )}
-                        {/* <div>
-                            <Chart
-                                donutData={donutData}
-                                featureData={featureData}
-                            />
-                        </div> */}
                         {/* items */}
                         {loading ? (
                             //show skeleton when loading
@@ -405,41 +398,6 @@ function Home() {
                         </>
                     )}
                 </div>
-                {/* <div className="bg-white flex flex-col px-4 pt-4 pb-4 rounded-md">
-                    <span className="font-bold text-[20px]">
-                        Xu hướng hành vi
-                    </span>
-                    <span className=" mt-1 text-[18px] text-gray-700">
-                        {smartDescription}
-                    </span>
-
-                    {predictionResult && (
-                        <div className="ml-2 mt-2 text-sm text-gray-700">
-                            <div>
-                                <span className="font-semibold text-[17px]">
-                                    Danh mục dự đoán:
-                                </span>{" "}
-                                {predictedCategory}
-                            </div>
-
-                            {predictionConfidence !== null && (
-                                <div className="mt-1">
-                                    <span className="font-semibold text-[17px]">
-                                        Độ tin cậy:
-                                    </span>{" "}
-                                    {(predictionConfidence * 100).toFixed(2)}%
-                                </div>
-                            )}
-
-                            <div className="mt-1">
-                                <span className="font-semibold text-[17px]">
-                                    Thời gian tạo:
-                                </span>{" "}
-                                {predictionResult.data.created_at}
-                            </div>
-                        </div>
-                    )}
-                </div> */}
             </div>
         </div>
     )

@@ -30,7 +30,7 @@ export default function TwoCharts({ donutData, featureData }) {
                                 data={donutData}
                                 dataKey="value"
                                 nameKey="name"
-                                outerRadius={100}
+                                outerRadius={85}
                                 stroke="none"
                                 label={({ percent }) =>
                                     `${(percent * 100).toFixed(0)}%`
