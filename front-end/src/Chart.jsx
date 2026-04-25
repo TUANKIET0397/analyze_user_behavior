@@ -20,7 +20,7 @@ export default function TwoCharts({ donutData, featureData }) {
             {/* Donut chart */}
             <div className="rounded-md bg-white p-6 shadow-sm">
                 <h2 className="mb-8 text-[18px] font-semibold uppercase tracking-wide text-gray-500">
-                    Sản phẩm gợi ý
+                    Recommended Products
                 </h2>
 
                 <div className="relative h-65 w-full">
@@ -71,7 +71,7 @@ export default function TwoCharts({ donutData, featureData }) {
             {/* Bar chart */}
             <div className="rounded-md bg-white p-6 shadow-sm">
                 <h2 className="mb-8 text-[18px] font-semibold uppercase tracking-wide text-gray-500">
-                    Các yếu tố ảnh hưởng
+                    Influencing Factors
                 </h2>
 
                 <div className="h-65 w-full">

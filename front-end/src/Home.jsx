@@ -167,13 +167,13 @@ function Home() {
 
     const smartDescription = useMemo(() => {
         if (!predictionResult) {
-            return `Chưa có dự đoán nào được tạo ra. Vui lòng điền thông tin và nhấn "Dự đoán" để xem kết quả.`
+            return `No predictions have been generated yet. Please fill in the information and click "Predict" to see the results.`
         }
 
         const input = predictionResult.data.input
         const prediction = predictionResult.data.prediction
 
-        return `Object có xu hướng mua sắm vào mùa ${input.season}, với tần suất ${input.frequency_of_purchases}. AI dự đoán nhóm sản phẩm phù hợp nhất hiện tại là ${prediction.predicted_category} với độ tin cậy ${(prediction.confidence * 100).toFixed(2)}%.`
+        return `This user tends to shop in ${input.season}, with a purchase frequency of ${input.frequency_of_purchases}. The AI predicts the best product category is ${prediction.predicted_category} with a confidence level of ${(prediction.confidence * 100).toFixed(2)}%.`
     }, [predictionResult])
 
     return (
@@ -208,7 +208,7 @@ function Home() {
                                         className="rounded-2xl bg-gray-700 px-4 h-8 w-auto text-white cursor-pointer"
                                         onClick={toggleEdit}
                                     >
-                                        {isEditing ? "Đóng" : "Sửa"}
+                                        {isEditing ? "Close" : "Edit"}
                                     </button>
                                     <button
                                         type="submit"
@@ -223,7 +223,7 @@ function Home() {
                                                 color="#fff"
                                             />
                                         ) : (
-                                            "Dự đoán"
+                                            "Predict"
                                         )}
                                     </button>
                                 </div>
@@ -339,7 +339,7 @@ function Home() {
                 {/* conclusion */}
                 <div className="bg-white flex flex-col px-4 pt-4 pb-4 rounded-md">
                     <span className="font-bold text-[20px]">
-                        Xu hướng hành vi
+                        Behavior Trends
                     </span>
 
                     {loading ? (
@@ -377,7 +377,7 @@ function Home() {
                                 <div className="ml-2 mt-2 text-sm text-gray-700">
                                     <div>
                                         <span className="font-semibold text-[17px]">
-                                            Danh mục dự đoán:
+                                            Predicted Category:
                                         </span>{" "}
                                         {predictedCategory}
                                     </div>
@@ -385,7 +385,7 @@ function Home() {
                                     {predictionConfidence !== null && (
                                         <div className="mt-1">
                                             <span className="font-semibold text-[17px]">
-                                                Độ tin cậy:
+                                                Confidence:
                                             </span>{" "}
                                             {(
                                                 predictionConfidence * 100
@@ -396,7 +396,7 @@ function Home() {
 
                                     <div className="mt-1">
                                         <span className="font-semibold text-[17px]">
-                                            Thời gian tạo:
+                                            Created At:
                                         </span>{" "}
                                         {predictionResult.data.created_at}
                                     </div>

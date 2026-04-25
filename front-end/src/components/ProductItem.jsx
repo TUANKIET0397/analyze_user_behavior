@@ -38,7 +38,7 @@ export default function ProductItem({ predictionId }) {
                         />
 
                         <div className="absolute right-3 top-3 rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-600">
-                            Gợi ý
+                            Recommended
                         </div>
                     </div>
 
