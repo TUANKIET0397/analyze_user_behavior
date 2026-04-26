@@ -1,8 +1,8 @@
 # Fashion Category Prediction
 
-XGBoost model dự đoán Category (Clothing / Accessories / Footwear)
+XGBoost model for predicting category (Clothing / Accessories / Footwear).
 
-## Cấu trúc project
+## Project Structure
 
 ```
 back-end/
@@ -13,6 +13,7 @@ back-end/
 │   │   ├── config.py
 │   │   └── database.py
 │   ├── models/
+│   │   ├── category_product.py
 │   │   └── prediction.py
 │   ├── routers/
 │   │   └── prediction_router.py
@@ -24,12 +25,15 @@ back-end/
 │   │   ├── model.py
 │   │   └── preprocessing.py
 │   └── utils/
-│       └── mapper.py
+│       ├── mapper.py
+│       └── seed_data.py
 ├── models/
 │   ├── xgb_category.json
 │   ├── label_encoder.pkl
 │   └── train_cols.pkl
-├── app.db
+├── database.db
+├── shopping_trends_updated.csv
+├── static/
 ├── train_and_save.py
 ├── requirements.txt
 └── README_MODEL.md
@@ -39,71 +43,69 @@ back-end/
 
 ## Setup
 
-### 1. Cài dependencies
+### 1. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Đặt file data
+### 2. Place the dataset file
 
-Đặt file `shopping_trends_updated.csv` vào thư mục gốc (cùng cấp với `train_and_save.py`).
+Place `shopping_trends_updated.csv` in the project root (same level as `train_and_save.py`).
 
-### 3. Train và lưu model
+### 3. Train and save the model
 
 ```bash
 python train_and_save.py
 ```
 
-Sau bước này thư mục `models/` sẽ được tạo với 3 files.
+After this step, the `models/` folder will be created with 3 files.
 
-### 4. Chạy API server
+### 4. Run the API server
 
 ```bash
 python -m uvicorn app.main:app --reload
 ```
 
-API chạy tại: http://localhost:8000
+API runs at: http://localhost:8000
 
 ---
-
-hình ảnh - tên - giá tiền bảng category: Footwear - Accessories - clothing
 
 ## API Endpoints
 
-| Method | Endpoint                           | Mô tả                     |
-| ------ | ---------------------------------- | ------------------------- |
-| GET    | `/`                                | Kiểm tra server           |
-| GET    | `/health`                          | Trạng thái server + model |
-| POST   | `/api/predictions`                 | Dự đoán 1 user + lưu DB   |
-| GET    | `/api/predictions`                 | Danh sách lịch sử dự đoán |
-| GET    | `/api/predictions/{prediction_id}` | Chi tiết 1 dự đoán        |
-| GET    | `/api/predictions/{prediction_id}/products` | Chi tiết 1 dự đoán + gợi ý sản phẩm |
-| DELETE | `/api/predictions/{prediction_id}` | Xoa 1 dự đoán             |
+| Method | Endpoint                                    | Description                         |
+| ------ | ------------------------------------------- | ----------------------------------- |
+| GET    | `/`                                         | Server check                        |
+| GET    | `/health`                                   | Server + model status               |
+| POST   | `/api/predictions`                          | Predict one user + save to DB       |
+| GET    | `/api/predictions`                          | Prediction history                  |
+| GET    | `/api/predictions/{prediction_id}`          | Prediction details                  |
+| GET    | `/api/predictions/{prediction_id}/products` | Prediction details + product list   |
+| DELETE | `/api/predictions/{prediction_id}`          | Delete a prediction                 |
 
 ### Swagger UI
 
-Truy cập http://localhost:8000/docs để xem và test API trực tiếp.
+Visit http://localhost:8000/docs to view and test the API.
 
 ---
 
-## Ví dụ Request
+## Example Requests
 
 ### Create prediction
 
 ```bash
 curl -X POST http://localhost:8000/api/predictions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "age": 28,
-    "gender": "Male",
-    "purchase_amount_usd": 45.5,
+    -H "Content-Type: application/json" \
+    -d '{
+        "age": 28,
+        "gender": "Male",
+        "purchase_amount_usd": 45.5,
         "review_rating": 4,
         "season": "Fall",
         "previous_purchases": 12,
         "frequency_of_purchases": "monthly",
         "subscription_status": "No"
-  }'
+    }'
 ```
 
 ### Response

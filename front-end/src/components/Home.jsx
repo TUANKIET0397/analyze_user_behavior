@@ -1,18 +1,18 @@
-import img from "./assets/avatar.jpg"
+import img from "../assets/avatar.jpg"
 import Chart from "./Chart"
 import {
     TwoChartsSkeleton,
     ProductSkeleton,
     SkeletonBlock,
-} from "./components/TwoChartsSkeleton"
-import ProductItem from "./components/ProductItem"
+} from "./TwoChartsSkeleton"
+import ProductItem from "./ProductItem"
 import { BiSolidLike } from "react-icons/bi"
 import { FaCartShopping } from "react-icons/fa6"
 import { TailSpin } from "react-loader-spinner"
 // import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import { useMemo, useState } from "react"
-import { createPrediction, explainPrediction } from "./api/api"
+import { createPrediction, explainPrediction } from "../api/api"
 
 function Home() {
     const MIN_LOADING_MS = 1200
@@ -446,4 +446,3 @@ function Home() {
 }
 
 export default Home
-
